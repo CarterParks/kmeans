@@ -75,22 +75,13 @@ int *kmeans(double *data){
   int *n_clus = malloc(CLUS_SIZE);
   memset(n_clus, 0, CLUS_SIZE);
   
-  for (int i =0; i < K;i++){
-    for(int j = 0; j < COLS; j++)
-      fprintf(stderr, "%f, ", cent[i*COLS + j]);
-    fprintf(stderr, "\n");
-  }
-  
   int n = 0;
   while (1){
     memcpy(clus, n_clus, CLUS_SIZE);
     n_clus = assign(data, cent);
     if (!memcmp(clus, n_clus, CLUS_SIZE)) break;
-    fprintf(stderr, "iteration %d\r", n++);
     cent = centroids(data, n_clus);
   }
 
-  fprintf(stderr, "iteration %d\n", n);
-  
   return n_clus;
 }

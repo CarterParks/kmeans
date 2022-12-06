@@ -1,2 +1,2 @@
 main: *.c *.h
-	gcc -g -lm -o main *.c
+	gcc -g -lm -o serial *.c
