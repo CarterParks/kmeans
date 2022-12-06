@@ -4,9 +4,8 @@
 #include<math.h>
 #include<float.h>
 #include"kmeans.h"
-#include <time.h>
+#include<omp.h>
 
-// distance between 2 points in COLS dimensions
 double distance(double *p1, double *p2){
   double sum = 0;
   for (int i = 0; i < COLS; i++)
@@ -18,6 +17,7 @@ double distance(double *p1, double *p2){
 int *assign(double *data, double *centroids){
   int *clus = malloc(ROWS * sizeof *clus);
 
+  # pragma omp parallel for
   for (int p = 0; p < ROWS; p++){
     double min = distance(data + p * COLS, centroids + 0 * COLS);
     for (int k = 1; k < K; k++){
@@ -39,14 +39,30 @@ double *centroids(double *data, int *clusters){
   memset(cent, 0, K * COLS * sizeof *cent);
   memset(count, 0, K * sizeof *count);
 
-  for (int p = 0; p < ROWS; p++) {
-    int k = clusters[p];
-    count[k] += 1;
-    for (int c = 0; c < COLS; c++)
-      cent[k * COLS + c] += data[p * COLS + c];
+  // for (int p = 0; p < ROWS; p++) {
+  //   int k = clusters[p];
+  //   count[k] += 1;
+  //   for (int c = 0; c < COLS; c++)
+  //     cent[k * COLS + c] += data[p * COLS + c];
+  // }
+  
+  # pragma omp parallel for
+  for (int k = 0; k < K; k++){
+    # pragma omp parallel for
+    for (int p = 0; p < ROWS; p++){
+      if(clusters[p] == k){
+        count[k]++;
+        # pragma omp parallel for
+        for (int c = 0; c < COLS; c++)
+            cent[k * COLS + c] += data[p * COLS + c];
+      }
+    }
   }
+    
 
+  # pragma omp parallel for
   for (int k = 0; k < K; k++)
+    # pragma omp parallel for
     for (int c = 0; c < COLS; c++)
       cent[k * COLS + c] /= count[k];
   
@@ -61,7 +77,7 @@ double *initial_centroids(double *data){
 
   double *cent = malloc(K * COLS * sizeof *cent);
   for (int i = 0; i < K; i++){
-    memcpy(cent + i * COLS, data + point * COLS, COLS * sizeof *data);
+    omp_target_memcpy(cent + i * COLS, data + point * COLS, COLS * sizeof *data, 0,0,0,0);
     point = (point + step) % ROWS;
   }
 
@@ -75,22 +91,14 @@ int *kmeans(double *data){
   int *n_clus = malloc(CLUS_SIZE);
   memset(n_clus, 0, CLUS_SIZE);
   
-  for (int i =0; i < K;i++){
-    for(int j = 0; j < COLS; j++)
-      fprintf(stderr, "%f, ", cent[i*COLS + j]);
-    fprintf(stderr, "\n");
-  }
-  
   int n = 0;
   while (1){
-    memcpy(clus, n_clus, CLUS_SIZE);
+    omp_target_memcpy(clus, n_clus, CLUS_SIZE, 0, 0, 0, 0);
     n_clus = assign(data, cent);
-    if (!memcmp(clus, n_clus, CLUS_SIZE)) break;
-    fprintf(stderr, "iteration %d\r", n++);
+    int m = memcmp(clus, n_clus, CLUS_SIZE);
+    if (!m) break;
     cent = centroids(data, n_clus);
   }
 
-  fprintf(stderr, "iteration %d\n", n);
-  
   return n_clus;
 }

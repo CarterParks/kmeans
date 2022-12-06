@@ -3,6 +3,7 @@
 #include<string.h>
 #include<math.h>
 #include"kmeans.h"
+#include<omp.h>
 
 int table(char *file_name, double *t){
   FILE *file_pointer = fopen(file_name, "row");
