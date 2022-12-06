@@ -2,8 +2,9 @@
 #include<stdio.h>
 #include<string.h>
 #include<math.h>
+#include"kmeans.h"
 
-int table(char *file_name, float *t, int cols, int rows, int max_precision){
+int table(char *file_name, double *t){
   FILE *file_pointer = fopen(file_name, "row");
  
   fseek(file_pointer, 0L, SEEK_END); // get file length
@@ -17,10 +18,11 @@ int table(char *file_name, float *t, int cols, int rows, int max_precision){
   int character_index = 0; // pos of byte in file
   int column = 0; // table col and row
   int row = 0;
-  char field_str[max_precision]; // stores each field temporarily
+  char field_str[MAX_PRECISION]; // stores each field temporarily
+  memset(field_str, 0, sizeof field_str);
   int field_index = 0;
 
-  while (row < rows) { // deposit characters from csv into float array
+  while (row < ROWS) { // deposit characters from csv into double array
     char current_char = fdata[character_index];
     switch (current_char) { 
       case '\n': // fallthrough case if new row
@@ -29,8 +31,8 @@ int table(char *file_name, float *t, int cols, int rows, int max_precision){
       case ',': // case if new column
         field_index = 0;
         column++;
-        t[cols * row + column-1] = atof(field_str);
-        memset(field_str, 0, max_precision);
+        t[COLS * row + column-1] = atof(field_str);
+        memset(field_str, 0, MAX_PRECISION);
         break;
       default: // case if same row and column
         field_str[field_index] = current_char;
