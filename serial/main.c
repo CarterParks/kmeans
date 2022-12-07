@@ -2,7 +2,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<math.h>
-#include"kmeans.h"
+#include "kmeans.h"
 
 void main(int argc, char *argv[]){
   double *t = malloc(COLS * ROWS * sizeof *t);

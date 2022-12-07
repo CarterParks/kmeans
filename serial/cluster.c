@@ -55,7 +55,6 @@ double *centroids(double *data, int *clusters){
 
 
 double *initial_centroids(double *data){
-  srand(1752);
   int step = ROWS / K;
   int point = rand() % step;
 
