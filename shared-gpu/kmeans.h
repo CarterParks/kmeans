@@ -5,3 +5,4 @@
 
 int table(char *, double *);
 int *kmeans(double *);
+#define ROWS 40

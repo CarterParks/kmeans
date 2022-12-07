@@ -4,7 +4,7 @@ import sys
 
 L = 42305
 
-with open('indata3col.csv') as f:
+with open('indata.csv') as f:
   data = f.readlines()[:L]
 
 data = list(map(lambda a: a.split(','), data))
