@@ -9,7 +9,7 @@ on.
 
 ## Shared CPU
 The shared CPU implementation made use of OpenMP to parallelize 
-protions of logic that were frequently running. Typically, this 
+portions of logic that were frequently running. Typically, this 
 entailed the use of the `parallel for` directive to divide the 
 serial work among processors.
 
