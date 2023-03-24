@@ -1,16 +1,18 @@
 # K-means Spotify
-All code can be found at `https://github.com/CarterParks/kmeans`
+Use K-means clustering to group Spotify data based on metrics found in `genres_v2.csv`.
 # Description
 ## Serial
 The serial implementation implemented the K-means clustering 
 algorithm as simply as possible with, a focus on isolating the 
 functional parts of the program to aid parallelization later 
 on.
+
 ## Shared CPU
 The shared CPU implementation made use of OpenMP to parallelize 
 protions of logic that were frequently running. Typically, this 
 entailed the use of the `parallel for` directive to divide the 
 serial work among processors.
+
 ## Shared GPU
 The shared GPU implementation condensed much of the code down 
 to its bare essentials. Using CUDA allowed the creation of kernels 
@@ -18,16 +20,11 @@ that could be launched to spearate the work of what would ususally
 be a serial loop. Although the output does not identically match 
 the serial implementation, the visualization is inidstiguishable 
 from the above implementations.
-## Distributed CPU
-Unimplemented
-## Distributed GPU
-Unimplemented
-
-# Performance Analysis
-Incomplete
 
 # Compilation
 Makefiles are included in each subdirectory.
+
+Compile with `make`
 
 # Execution Script
 The execution, validation and visualization steps can all be run with.
