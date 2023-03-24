@@ -16,7 +16,7 @@ serial work among processors.
 ## Shared GPU
 The shared GPU implementation condensed much of the code down 
 to its bare essentials. Using CUDA allowed the creation of kernels 
-that could be launched to spearate the work of what would ususally 
+that could be launched to seperate the work of what would ususally 
 be a serial loop. Although the output does not identically match 
 the serial implementation, the visualization is inidstiguishable 
 from the above implementations.
